@@ -1,4 +1,5 @@
 var mongoose = require("mongoose");
+var uniqueValidator = require("mongoose-unique-validator");
 
 var Schema = mongoose.Schema;
 
@@ -13,5 +14,7 @@ var userSchema = new Schema({
   img: { type: String, required: false },
   role: { type: String, default: "USER_ROLE" },
 });
+
+userSchema.plugin(uniqueValidator, { message: "El correo ya existe" });
 
 module.exports = mongoose.model("User", userSchema);
