@@ -1,4 +1,5 @@
 var express = require("express");
+var bcrypt = require("bcryptjs");
 
 var app = express();
 
@@ -25,18 +26,18 @@ app.get("/", (req, res, next) => {
 // ==========================================
 // Crear un nuevo usuario
 // ==========================================
-app.post("/", mdAutenticacion.verificaToken, (req, res) => {
+app.post("/", (req, res) => {
   var body = req.body;
 
-  var usuario = new Usuario({
-    nombre: body.nombre,
+  var user = new User({
+    name: body.name,
     email: body.email,
     password: bcrypt.hashSync(body.password, 10),
     img: body.img,
     role: body.role,
   });
 
-  usuario.save((err, usuarioGuardado) => {
+  user.save((err, userSafe) => {
     if (err) {
       return res.status(400).json({
         ok: false,
@@ -47,8 +48,7 @@ app.post("/", mdAutenticacion.verificaToken, (req, res) => {
 
     res.status(201).json({
       ok: true,
-      usuario: usuarioGuardado,
-      usuariotoken: req.usuario,
+      user: userSafe,
     });
   });
 });
