@@ -11,7 +11,7 @@ app.get("/", (req, res, next) => {
     if (err) {
       return res.status(500).json({
         ok: false,
-        mensaje: "Error al buscar usuarios",
+        mensaje: "Error al cargar usuarios",
         errors: err,
       });
     }
