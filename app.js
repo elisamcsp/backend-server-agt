@@ -19,6 +19,7 @@ var doctorRoutes = require("./routes/doctor");
 var patientRoutes = require("./routes/patient");
 var searchRoutes = require("./routes/search");
 var uploadRoutes = require("./routes/upload");
+var imagesRoutes = require("./routes/images");
 
 // Conexion a la base de datos
 mongoose.connection.openUri("mongodb://localhost:27017/agtDB", (err, res) => {
@@ -35,6 +36,7 @@ app.use("/login", loginRoutes);
 app.use("/", appRoutes);
 app.use("/search", searchRoutes);
 app.use("/upload", uploadRoutes);
+app.use("/img", imagesRoutes);
 
 // Escuchar peticiones
 app.listen(3000, function () {
