@@ -23,7 +23,6 @@ app.get("/", (req, res, next) => {
     .populate("doctor", "name")
     .exec((err, patient) => {
       if (err) {
-        console.log(err);
         return res.status(500).json({
           ok: false,
           mensaje: "Error al cargar los pacientes",
@@ -33,10 +32,9 @@ app.get("/", (req, res, next) => {
 
       Patient.count({}, (err, count) => {
         if (err) {
-          console.log(err);
           return res.status(500).json({
             ok: false,
-            mensaje: "Error al cargar los pacientes",
+            mensaje: "Error al contar los pacientes",
             errors: err,
           });
         }
@@ -94,7 +92,7 @@ app.put("/:id", mdAuthentication.verifyToken, (req, res) => {
         });
       }
 
-      res.status(200).json({
+      return res.status(200).json({
         ok: true,
         patient: patientSave,
         userToken: req.user,
