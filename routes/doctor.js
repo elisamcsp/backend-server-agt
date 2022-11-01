@@ -64,7 +64,7 @@ app.put("/:id", mdAuthentication.verifyToken, (req, res) => {
       if (err) {
         return res.status(400).json({
           ok: false,
-          message: "Error al actualizar usuario",
+          message: "Error al actualizar médico",
           errors: err,
         });
       }
