@@ -5,7 +5,47 @@ var Doctor = require("../models/doctor");
 var Patient = require("../models/patient");
 var User = require("../models/user");
 
-// Rutas
+// ===============================
+// Búsquedas por colección
+// ===============================
+app.get("/collection/:table/:search", (req, res, next) => {
+  var search = req.params.search;
+  var table = req.params.table;
+
+  var regex = new RegExp(search, "i");
+  var promess;
+
+  switch (table) {
+    case "doctor":
+      promess = searchDoctor(search, regex);
+      break;
+
+    case "patient":
+      promess = searchPatient(search, regex);
+      break;
+
+    case "user":
+      promess = searchUser(search, regex);
+      break;
+    default:
+      return res.status(400).json({
+        ok: false,
+        message: "Los tipos de búsqueda sólo son : usuario, paciente y médico ",
+        error: { message: "Tipo de tabla/colección no válido" },
+      });
+  }
+
+  promess.then((data) => {
+    return res.status(200).json({
+      ok: true,
+      [table]: data,
+    });
+  });
+});
+
+// ===============================
+// Búsquedas general
+// ===============================
 app.get("/todo/:search", (req, res, next) => {
   var search = req.params.search;
 
@@ -27,8 +67,8 @@ app.get("/todo/:search", (req, res, next) => {
 
 function searchDoctor(search, regex) {
   return new Promise((resolve, reject) => {
-    Doctor.find({}, "dni name email")
-      .or([{ name: regex }, { email: regex }])
+    Doctor.find({ name: regex }, "dni name email")
+      .populate("user", "name email")
       .exec((err, doctors) => {
         if (err) {
           reject("Error al cargar doctores", err);
@@ -42,6 +82,8 @@ function searchDoctor(search, regex) {
 function searchPatient(search, regex) {
   return new Promise((resolve, reject) => {
     Patient.find({}, "dni name address birthday phone dischargeDate parentName")
+      .populate("user", "name email")
+      .populate("doctor", "name")
       .or([{ name: regex }, { parentName: regex }])
       .exec((err, patients) => {
         if (err) {
